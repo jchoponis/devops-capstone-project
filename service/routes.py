@@ -61,19 +61,20 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
+
 # ... place you code here to LIST accounts ...
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     """It should list all accounts, no paging"""
     accounts = Account.all()
-    account_list = [account.serialize() for account in accounts]    
+    account_list = [account.serialize() for account in accounts]
     return jsonify(account_list), status.HTTP_200_OK
 
 ######################################################################
 # READ AN ACCOUNT
 ######################################################################
 
-# ... place you code here to READ an account ...
+
 # ... place you code here to READ an account ...
 @app.route("/accounts/<id>", methods=["GET"])
 def read_account(id):
@@ -88,6 +89,7 @@ def read_account(id):
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
+
 
 # ... place you code here to UPDATE an account ...
 @app.route("/accounts/<id>", methods=["PUT"])
@@ -105,13 +107,14 @@ def update_account(id):
 # DELETE AN ACCOUNT
 ######################################################################
 
+
 # ... place you code here to DELETE an account ...
 @app.route("/accounts/<id>", methods=["DELETE"])
 def delete_account(id):
     """It should delete a single account"""
     found = Account.find(id)
     if found:
-        found.delete()    
+        found.delete()
     return "", status.HTTP_204_NO_CONTENT
 
 ######################################################################
