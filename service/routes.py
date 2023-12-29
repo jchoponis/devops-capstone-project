@@ -76,17 +76,25 @@ def read_account(id):
     account = Account()
     found = account.find(id)
     if not found:
-        return "", status.HTTP_404_NOT_FOUND
+        abort(status.HTTP_404_NOT_FOUND, f"account with id [{id}] was not found")
     else:
-        message = found.serialize()
-        return message, status.HTTP_200_OK
+        return found.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
-
+@app.route("/accounts/<id>", methods=["PUT"])
+def update_account(id):
+    """It should update a single account"""
+    found = Account.find(id)
+    if not found:
+        abort(status.HTTP_404_NOT_FOUND, f"account with id [{id}] was not found")
+    else:
+        found.deserialize(request.get_json())
+        found.update()
+        return found.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # DELETE AN ACCOUNT
