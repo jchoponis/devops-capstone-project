@@ -25,6 +25,8 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
+
+
 class TestAccountService(TestCase):
     """Account Service Tests"""
 
@@ -124,12 +126,16 @@ class TestAccountService(TestCase):
             json=account.serialize(),
             content_type="test/html"
         )
-        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+        )
 
     # ADD YOUR TEST CASES HERE ...
     #
     # read
     #
+
     def test_read_account(self):
         """It should read a single account"""
         accounts = self._create_accounts(1)
@@ -145,7 +151,7 @@ class TestAccountService(TestCase):
 
     def test_read_account_sad(self):
         """It should show 404_not_found account can't be found"""
-        accounts = self._create_accounts(1)
+        self._create_accounts(1)
         response = self.client.get(
             f"{BASE_URL}/0",
             content_type="application/json"
@@ -155,15 +161,16 @@ class TestAccountService(TestCase):
     #
     # update
     #
+
     def test_update_account(self):
         """It should update a single account"""
-        #create account
+        # create account
         accounts = self._create_accounts(1)
-        #note id
+        # note id
         a_id = accounts[0].id
-        #note original name
+        # note original name
         original_name = accounts[0].name
-        #fetch from api to prove match
+        # fetch from api to prove match
         response = self.client.get(
             f"{BASE_URL}/{a_id}",
             content_type="application/json"
@@ -171,17 +178,17 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(data["name"], original_name)
-        #note new name
+        # note new name
         new_name = "charlie-9609"
-        #adjust record in memory and submit to api for commit
+        # adjust record in memory and submit to api for commit
         accounts[0].name = new_name
         response = self.client.put(
             f"{BASE_URL}/{a_id}",
             json=accounts[0].serialize(),
             content_type="application/json"
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)        
-        #re-fetch to prove match on new value
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # re-fetch to prove match on new value
         response = self.client.get(
             f"{BASE_URL}/{a_id}",
             content_type="application/json"
@@ -203,6 +210,7 @@ class TestAccountService(TestCase):
     #
     # delete
     #
+
     def test_delete_account(self):
         """It should delete a single account"""
         accounts = self._create_accounts(1)
@@ -213,6 +221,7 @@ class TestAccountService(TestCase):
     #
     # list accounts
     #
+
     def test_list_accounts(self):
         """It should list all accounts"""
         num_accounts = 5
@@ -221,10 +230,10 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.get_json()), num_accounts)
 
-
     #
     # security
     #
+
     def test_security_headers(self):
         """It should return security headers"""
         response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
@@ -237,7 +246,7 @@ class TestAccountService(TestCase):
         }
         for key, value in headers.items():
             self.assertEqual(response.headers.get(key), value)
-    
+
     def test_cors_security(self):
         """It should return a CORS header"""
         response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
